@@ -5,7 +5,7 @@ info:
 servers:
   - url: http://localhost:3000
     description: Local development server
-  - url: https://YOUR-RENDER-URL.onrender.com
+  - url: https://task-api-service-f6go.onrender.com
     description: Production server (Replace with your actual URL)
 
 tags:
@@ -81,7 +81,51 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: object{
+  "name": "task-api",
+  "version": "1.0.0",
+  "description": "A simple Node.js + Express + Prisma API for managing tasks",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --env-file=.env --watch src/server.js",
+    "start": "node src/server.js",
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "seed:dev": "node --env-file=.env prisma/seed.js",
+    "seed:prod": "node prisma/seed.js",
+    "generate": "prisma generate"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "prisma",
+    "postgres",
+    "api",
+    "tasks"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/client": "^7.4.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "js-yaml": "^4.1.1",
+    "morgan": "^1.10.1",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "prisma": "^7.3.0"
+  }
+}
                 properties:
                   error:
                     type: string
