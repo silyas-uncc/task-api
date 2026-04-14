@@ -4,18 +4,35 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:3000
-    description: Local development servers
+    description: Local development server
+  - url: https://YOUR-RENDER-URL.onrender.com
+    description: Production server (Replace with your actual URL)
+
 tags:
   - name: Tasks
     description: Task-related endpoints
   - name: Monitoring
     description: Operational endpoints, such as health checks
+
 paths:
   /tasks:
     get:
       summary: List all tasks
+      description: Retrieve tasks with optional filtering by completion status
       tags:
         - Tasks
+      parameters:
+        - name: completed
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: |
+            Filter tasks by completion status:
+            - `true` - returns only completed tasks
+            - `false` - returns only incomplete tasks
+            - omitted - returns all tasks
+          example: false
       responses:
         '200':
           description: OK
@@ -25,6 +42,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad request due to invalid query parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: string
+              example:
+                error: Validation failed
+                details:
+                  - 'completed must be true, false, or omitted'
     post:
       summary: Create a new task
       tags:
@@ -56,8 +90,10 @@ paths:
                     items:
                       type: string
                 example:
-                  errors:
+                  error: Validation failed
+                  details:
                     - 'Title must be at least 3 characters'
+
   /health:
     get:
       summary: Health Check
@@ -75,6 +111,7 @@ paths:
                   status:
                     type: string
                     example: ok
+
 components:
   schemas:
     Task:
@@ -90,3 +127,5 @@ components:
         completed:
           type: boolean
           example: false
+      required:
+        - title
